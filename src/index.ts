@@ -11,7 +11,7 @@ import {
     ModalSubmitInteraction
 } from "discord.js";
 
-import type { SlashCommand } from "./types";
+import type { DBApplication, SlashCommand } from "./types";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import path from 'node:path'
@@ -19,7 +19,7 @@ import { globby } from "globby";
 dotenv.config();
 
 
-const appModel = mongoose.model("app", new mongoose.Schema({
+export const appModel = mongoose.model<DBApplication>("app", new mongoose.Schema<DBApplication>({
     userId: String,
     fields: Object,
 }));
@@ -75,7 +75,7 @@ async function handleCommand(interaction: ChatInputCommandInteraction) {
         await command.execute({
             ctx: interaction,
             options,
-            db: mongoose
+            db: appModel
         });
     } catch (error) {
         console.error(error);
