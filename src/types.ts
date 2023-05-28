@@ -1,8 +1,7 @@
-import type {SlashCommandBuilder, CommandInteraction, AutocompleteInteraction } from "discord.js"
+import type { SlashCommandBuilder, CommandInteraction, AutocompleteInteraction } from "discord.js"
+import { Mongoose } from "mongoose"
 
 export interface SlashCommand {
     command: SlashCommandBuilder | any,
-    execute: (interaction : CommandInteraction) => void,
-    autocomplete?: (interaction: AutocompleteInteraction) => void,
-    cooldown?: number // in seconds
+    execute: (context: { ctx: CommandInteraction, db: Mongoose, options: { [key: string]: string | number | boolean } }) => void,
 }
