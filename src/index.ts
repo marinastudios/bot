@@ -42,12 +42,13 @@ client.once(Events.ClientReady, async (c) => {
     console.log(`Logged in as ${c.user.tag}`);
 });
 
-const commands = await Promise.all((await globby(`${dirname}/commands/*.ts`)).map(async (v) => (await import(v)).default))
+const commands = await Promise.all((await globby([`${dirname}/commands/*.ts`, `${dirname}/commands/*.js`])).map(async (v) => (await import(v)).default))
 
 const slashCommands = new Collection<string, SlashCommand>()
 commands.forEach((v) => slashCommands.set(v.command.name, v))
 const slashCommandsArr: SlashCommandBuilder[] = commands.map((v) => v.command)
 const rest = new REST({ version: "10" }).setToken(token);
+
 rest.put(Routes.applicationCommands(client_id), {
     body: slashCommandsArr.map(command => command.toJSON())
 }).then((data: any) => {
